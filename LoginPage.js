@@ -9,11 +9,10 @@ export default function LoginPage() {
             <Image style={styles.logo} source={require("./assets/ucl.png")}/>  
             <TextInput style={styles.usernameInput} placeholder="username"></TextInput>
             <TextInput style={styles.password} placeholder="password"></TextInput>
+            <AppButton title="Login" />
             <TouchableOpacity>
                 <Text style={styles.register}>Not Signed up? <Text style={{color: "red"}}>Register</Text></Text>
             </TouchableOpacity>
-            {/* <Text>Not signed up?</Text> */}
-            <AppButton title="Login" />
         </SafeAreaView>
     )
 }
