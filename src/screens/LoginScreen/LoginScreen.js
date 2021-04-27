@@ -2,6 +2,7 @@ import React, {useState, useEffect} from 'react'
 import { View, Text, TextInput, Image, TouchableOpacity } from 'react-native'
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import styles from './styles'
+import { firebase } from '../../firebase/config'
 
 
 const LoginScreen = ({navigation}) => {
@@ -13,7 +14,28 @@ const LoginScreen = ({navigation}) => {
     }
 
     const onLoginPress = () => {
-        
+        firebase.auth().signInWithEmailAndPassword(email, password)
+            .then((response) => {
+                const uid = response.user.uid
+                const usersRef = firebase.firestore().collection('users')
+                usersRef
+                    .doc(uid)
+                    .get()
+                    .then(firestoreDocument => {
+                        if(!firestoreDocument.exists){
+                            alert("User does not exist")
+                            return;
+                        }
+                        const user = firestoreDocument.data()
+                        // navigation.navigate('HomeScreen', {user})
+                    })
+                    .catch(error => {
+                        alert(error)
+                    });
+            })
+            .catch(error => {
+                alert(error)
+            })
     }
     return (
         <View style={styles.container}>

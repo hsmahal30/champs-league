@@ -3,6 +3,7 @@ import { View, Text, TouchableOpacity } from 'react-native'
 import { TextInput } from 'react-native-gesture-handler'
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view'
 import styles from './styles'
+import { firebase } from '../../firebase/config'
 
 const RegisterScreen = ({navigation}) => {
     const [fullName, setFullName] = useState('')
@@ -14,7 +15,33 @@ const RegisterScreen = ({navigation}) => {
         navigation.navigate('Login')
     }
 
-    const onRegisterPress = () =>{}
+    const onRegisterPress = () =>{
+        if (password !== confirmPassword) {
+            alert("Passwords don't match.")
+            return
+        }
+        firebase.auth().createUserWithEmailAndPassword(email, password)
+            .then((response) => {
+                const uid = response.user.uid
+                const data = {
+                    id: uid,
+                    email,
+                    fullName,
+                };
+                const usersRef = firebase.firestore().collection('users')
+                usersRef.doc(uid).set(data)
+                    .then(() => {
+                        // navigation.navigate('HomeScreen', {user: data})
+                        console.log("Success")
+                    })
+                    .catch((error) => {
+                        alert(error)
+                    });
+            })
+            .catch((error) => {
+                alert(error)
+        });
+    }
 
     return (
         <View style={styles.container}>
@@ -54,9 +81,11 @@ const RegisterScreen = ({navigation}) => {
 
                     <TouchableOpacity 
                         style={styles.appButtonContainer}
-                        onPress={() => onLoginPress()}>
+                        onPress={() => onRegisterPress()}>
                         <Text style={styles.appButtonText}>Register</Text>
                     </TouchableOpacity>
+
+                    <Text style={styles.register}>Already signed up? <Text style={{color: 'red'}} onPress={onFooterLinkPress}>Login</Text></Text>
 
             </KeyboardAwareScrollView>
         </View>

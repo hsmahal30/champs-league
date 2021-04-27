@@ -30,10 +30,11 @@ export default StyleSheet.create({
         alignSelf: 'center',
     },
 
-    // register: {
-    //     top: 20,
-    //   color: "#fff",
-    // },
+    register: {
+        top: 20,
+      color: "#fff",
+      alignSelf: 'center',
+    },
 
   appButtonContainer: {
        backgroundColor: "#1F4068",
